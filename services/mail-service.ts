@@ -10,6 +10,7 @@ class MailService {
     this.transporter = nodemailer.createTransport({
       host: SMTP_HOST,
       port: +SMTP_PORT,
+      secure: true,
       auth: {
         user: SMTP_USER,
         pass: SMTP_PASSWORD,
@@ -19,7 +20,7 @@ class MailService {
 
   sendActivationMail = async (to: string, link: string) => {
     await this.transporter.sendMail({
-      from: process.env.SMTP_USER,
+      from: SMTP_USER,
       to,
       subject: "Актицвация аккаунта",
       text: "",

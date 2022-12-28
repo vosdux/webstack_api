@@ -13,17 +13,23 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const bcrypt_1 = __importDefault(require("bcrypt"));
+const dotenv_1 = __importDefault(require("dotenv"));
 const uuid_1 = require("uuid");
-const user_dto_1 = __importDefault(require("../dto/user-dto"));
-const models_1 = require("../models");
 const mail_service_1 = __importDefault(require("./mail-service"));
 const token_service_1 = __importDefault(require("./token-service"));
+const user_dto_1 = __importDefault(require("../dto/user-dto"));
 const index_1 = __importDefault(require("../exceptions/index"));
+const models_1 = require("../models");
+dotenv_1.default.config();
 class UserService {
     constructor() {
         this.giveTokensToUser = (user) => __awaiter(this, void 0, void 0, function* () {
             const userDto = new user_dto_1.default(user);
-            const tokens = token_service_1.default.generateTokens({ id: userDto.id, role: userDto.role, email: userDto.email });
+            const tokens = token_service_1.default.generateTokens({
+                id: userDto.id,
+                role: userDto.role,
+                email: userDto.email,
+            });
             yield token_service_1.default.saveToken(user.id, tokens.refreshToken);
             return Object.assign(Object.assign({}, tokens), { user: userDto });
         });
@@ -42,10 +48,7 @@ class UserService {
                 password: hashPassword,
                 activateLink,
             });
-            // await mailService.sendActivationMail(
-            //   email,
-            //   `${process.env.API_URL}/api/activate${activateLink}`
-            // );
+            yield mail_service_1.default.sendActivationMail(email, `${process.env.API_URL}/api/activate${activateLink}`);
             return yield this.giveTokensToUser(user);
         });
         this.login = (username, password) => __awaiter(this, void 0, void 0, function* () {
@@ -73,21 +76,23 @@ class UserService {
         });
         this.refresh = (refreshToken) => __awaiter(this, void 0, void 0, function* () {
             if (!refreshToken) {
-                throw index_1.default.BadRequest('Нет токена');
+                throw index_1.default.BadRequest("Нет токена");
             }
             const userData = yield token_service_1.default.validateRefreshToken(refreshToken);
             const tokenFromDb = yield token_service_1.default.findToken(refreshToken);
             if (!userData || !tokenFromDb) {
-                throw index_1.default.BadRequest('Не авторизован');
+                throw index_1.default.BadRequest("Не авторизован");
             }
-            // @ts-ignore
-            const user = yield models_1.User.findOne({ where: { id: userData.id } });
+            const user = (yield models_1.User.findOne({
+                // @ts-ignore
+                where: { id: userData.id },
+            }));
             return this.giveTokensToUser(user);
         });
         this.changePasswordRequest = (email) => __awaiter(this, void 0, void 0, function* () {
             const user = yield models_1.User.findOne({ where: { email } });
             if (!user) {
-                throw index_1.default.BadRequest('Неверный email');
+                throw index_1.default.BadRequest("Неверный email");
             }
             const changeLink = (0, uuid_1.v4)();
             user.changeLink = changeLink;
@@ -97,13 +102,18 @@ class UserService {
         this.changePassword = (password, secondPassword, changeLink) => __awaiter(this, void 0, void 0, function* () {
             const user = yield models_1.User.findOne({ where: { changeLink } });
             if (!user) {
-                throw index_1.default.BadRequest('Неверная ссылка для смены пароля');
+                throw index_1.default.BadRequest("Неверная ссылка для смены пароля");
             }
             if (password !== secondPassword) {
-                throw index_1.default.BadRequest('Пароли не совпадают');
+                throw index_1.default.BadRequest("Пароли не совпадают");
             }
             user.password = yield bcrypt_1.default.hash(password, 3);
             user.save();
+        });
+        this.check = (accessToken, refreshToken) => __awaiter(this, void 0, void 0, function* () {
+            if (!accessToken) {
+                throw index_1.default.UnauthorizedError();
+            }
         });
     }
 }

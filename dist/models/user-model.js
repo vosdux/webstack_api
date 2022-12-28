@@ -19,7 +19,7 @@ exports.User = db_1.default.define("user", {
     role: { type: sequelize_1.DataTypes.STRING, defaultValue: "USER" },
     isActivated: { type: sequelize_1.DataTypes.BOOLEAN, defaultValue: false },
     activateLink: { type: sequelize_1.DataTypes.STRING, allowNull: false, unique: true },
-    changeLink: { type: sequelize_1.DataTypes.STRING, allowNull: true, unique: true },
+    changeLink: { type: sequelize_1.DataTypes.STRING, allowNull: true },
 });
 exports.User.hasOne(token_model_1.Token, { sourceKey: "id" });
 token_model_1.Token.belongsTo(exports.User, { targetKey: "id" });

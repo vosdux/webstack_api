@@ -27,11 +27,12 @@ app.use((0, cors_1.default)());
 app.use((0, cookie_parser_1.default)());
 app.use('/api', router_1.default);
 app.use(error_middleware_1.default);
+app.get('/health', (req, res) => { res.json({ active: true }); });
 const start = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield db_1.default.authenticate();
         yield db_1.default.sync();
-        app.listen(8000, () => {
+        app.listen(PORT, () => {
             console.log(`⚡️[server]: Server is running at http://localhost:${PORT}`);
         });
     }

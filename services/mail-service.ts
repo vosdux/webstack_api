@@ -1,16 +1,21 @@
 import nodemailer from "nodemailer";
+import dotenv from 'dotenv';
 
+dotenv.config();
+const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASSWORD } = process.env;
+console.log(SMTP_HOST, 'SMTP_HOST');
+console.log(SMTP_PASSWORD, 'SMTP_PASSWORD');
 class MailService {
   transporter: nodemailer.Transporter;
   constructor() {
     this.transporter = nodemailer.createTransport({
       //@ts-ignore
-      host: process.env.SMTP_HOST,
-      port: process.env.SMTP_PORT,
-      secure: false,
+      host: SMTP_HOST,
+      port: SMTP_PORT,
+      secure: true,
       auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASSWORD,
+        user: SMTP_USER,
+        pass: SMTP_PASSWORD,
       },
     });
   }

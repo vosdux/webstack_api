@@ -1,13 +1,17 @@
 import { Sequelize } from 'sequelize';
+import dotenv from 'dotenv';
+
+dotenv.config();
+const { DB_NAME, DB_USER, DB_PASSWORD, DB_HOST, DB_PORT } = process.env;
 
 const sequelize = new Sequelize(
-  'webstack',
-  'postgres',
-  '123',
+  DB_NAME,
+  DB_USER,
+  DB_PASSWORD,
   {
     dialect: 'postgres',
-    host: process.env.DB_HOST,
-    port: 5433,
+    host: DB_HOST,
+    port: +DB_PORT,
   },
 );
 

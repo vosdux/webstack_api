@@ -1,5 +1,8 @@
 import jwt from "jsonwebtoken";
+import dotenv from 'dotenv';
 import { Token } from "../models/token-model";
+
+dotenv.config();
 
 type TokenPayload = { id: string; email: string; role: string };
 

@@ -1,11 +1,14 @@
 import bcrypt from "bcrypt";
+import dotenv from 'dotenv';
 import { v4 as uuid } from "uuid";
-import UserDto from "../dto/user-dto";
-import { User } from "../models";
 import mailService from "./mail-service";
 import tokenService from "./token-service";
-import { UserInstance } from "../models/user-model";
+import UserDto from "../dto/user-dto";
 import ApiError from "../exceptions/index";
+import { User } from "../models";
+import { UserInstance } from "../models/user-model";
+
+dotenv.config();
 
 class UserService {
   private giveTokensToUser = async (user: UserInstance) => {
@@ -45,10 +48,10 @@ class UserService {
       activateLink,
     });
 
-    // await mailService.sendActivationMail(
-    //   email,
-    //   `${process.env.API_URL}/api/activate${activateLink}`
-    // );
+    await mailService.sendActivationMail(
+      email,
+      `${process.env.API_URL}/api/activate${activateLink}`
+    );
 
     return await this.giveTokensToUser(user);
   };
@@ -96,8 +99,8 @@ class UserService {
       throw ApiError.BadRequest("Не авторизован");
     }
 
-    // @ts-ignore
     const user = (await User.findOne({
+      // @ts-ignore
       where: { id: userData.id },
     })) as UserInstance;
     return this.giveTokensToUser(user);

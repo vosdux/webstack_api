@@ -13,7 +13,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const dotenv_1 = __importDefault(require("dotenv"));
 const token_model_1 = require("../models/token-model");
+dotenv_1.default.config();
 class TokenService {
     constructor() {
         this.generateTokens = (payload) => {

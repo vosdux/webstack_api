@@ -17,12 +17,14 @@ app.use(cookieParser());
 app.use('/api', router);
 app.use(errorMiddleware);
 
+app.get('/health', (req, res) => { res.json({ active: true }) });
+
 const start = async () => {
   try {
     await sequelize.authenticate();
     await sequelize.sync();
 
-    app.listen(8000, () => {
+    app.listen(PORT, () => {
       console.log(`⚡️[server]: Server is running at http://localhost:${PORT}`);
     });
   } catch (e) {

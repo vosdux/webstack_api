@@ -12,7 +12,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const dotenv_1 = __importDefault(require("dotenv"));
 const user_service_1 = __importDefault(require("../../services/user-service"));
+dotenv_1.default.config();
 const THIRTY_DAYS = 30 * 24 * 60 * 60 * 1000;
 const REFRESH_COOKIES_OPTIONS = { maxAge: THIRTY_DAYS, httpOnly: true };
 class UserController {
@@ -90,6 +92,12 @@ class UserController {
             catch (error) {
                 next(error);
             }
+        });
+        this.check = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { token } = req.body;
+            }
+            catch (error) { }
         });
     }
 }

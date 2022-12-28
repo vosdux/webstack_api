@@ -37,7 +37,7 @@ export const User = sequelize.define<UserInstance>("user", {
   role: { type: DataTypes.STRING, defaultValue: "USER" },
   isActivated: { type: DataTypes.BOOLEAN, defaultValue: false },
   activateLink: { type: DataTypes.STRING, allowNull: false, unique: true },
-  changeLink: { type: DataTypes.STRING, allowNull: true, unique: true },
+  changeLink: { type: DataTypes.STRING, allowNull: true },
 });
 
 User.hasOne(Token, { sourceKey: "id" });

@@ -1,5 +1,8 @@
+import dotenv from 'dotenv';
 import { NextFunction, Request, Response } from "express";
 import userService from "../../services/user-service";
+
+dotenv.config();
 
 const THIRTY_DAYS = 30 * 24 * 60 * 60 * 1000;
 const REFRESH_COOKIES_OPTIONS = { maxAge: THIRTY_DAYS, httpOnly: true };

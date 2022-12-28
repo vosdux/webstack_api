@@ -1,4 +1,4 @@
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
 import dotenv from 'dotenv';
 import { Token } from "../models/token-model";
 
@@ -40,7 +40,7 @@ class TokenService {
 
   validateAccessToken = async (token: string) => {
     try {
-      const userData = await jwt.verify(token, process.env.JWT_ACCESS_SECRET);
+      const userData = await jwt.verify(token, process.env.JWT_ACCESS_SECRET) as JwtPayload;
       return userData;
     } catch (error) {
       return null;
@@ -49,7 +49,7 @@ class TokenService {
 
   validateRefreshToken = async (token: string) => {
     try {
-      const userData = await jwt.verify(token, process.env.JWT_REFRESH_SECRET);
+      const userData = await jwt.verify(token, process.env.JWT_REFRESH_SECRET) as JwtPayload;
       return userData;
     } catch (error) {
       return null;

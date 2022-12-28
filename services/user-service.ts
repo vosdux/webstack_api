@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
 import { v4 as uuid } from "uuid";
 import mailService from "./mail-service";
 import tokenService from "./token-service";
@@ -142,14 +142,37 @@ class UserService {
     user.save();
   };
 
-  check = async (accessToken: string, refreshToken: string) => {
-    if (!accessToken) {
+  check = async (accessToken?: string, refreshToken?: string) => {
+    if (!accessToken || !refreshToken) {
       throw ApiError.UnauthorizedError();
     }
 
-    
+    let accessPayload = await tokenService.validateAccessToken(accessToken);
+    if (accessPayload) {
+      const user = await User.findByPk(accessPayload.id);
+      if (user) {
+        const userDto = new UserDto(user);
+        return {
+          user: userDto,
+          accessToken: accessToken,
+          refreshToken: refreshToken,
+        };
+      }
+    }
 
-  }
+    const refreshPayload = await tokenService.validateRefreshToken(refreshToken);
+    const tokenFromDb = await tokenService.findToken(refreshToken);
+
+    if (refreshPayload && tokenFromDb) {
+      const user = await User.findByPk(refreshPayload.id);
+
+      if (user) {
+        return await this.giveTokensToUser(user);
+      }
+    }
+
+    throw ApiError.UnauthorizedError(); 
+  };
 }
 
 export default new UserService();

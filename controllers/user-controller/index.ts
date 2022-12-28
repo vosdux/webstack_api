@@ -1,11 +1,12 @@
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
 import { NextFunction, Request, Response } from "express";
 import userService from "../../services/user-service";
 
 dotenv.config();
 
 const THIRTY_DAYS = 30 * 24 * 60 * 60 * 1000;
-const REFRESH_COOKIES_OPTIONS = { maxAge: THIRTY_DAYS, httpOnly: true };
+const REFRESH_COOKIE_OPTIONS = { maxAge: THIRTY_DAYS, httpOnly: true };
+const REFRESH_COOKIE_NAME = 'refreshToken';
 
 class UserController {
   registration = async (
@@ -21,9 +22,9 @@ class UserController {
         secondPassword
       );
       res.cookie(
-        "refreshToken",
+        REFRESH_COOKIE_NAME,
         userData.refreshToken,
-        REFRESH_COOKIES_OPTIONS
+        REFRESH_COOKIE_OPTIONS
       );
       res.json(userData);
     } catch (error) {
@@ -40,9 +41,9 @@ class UserController {
       const { username, password } = req.body;
       const userData = await userService.login(username, password);
       res.cookie(
-        "refreshToken",
+        REFRESH_COOKIE_NAME,
         userData.refreshToken,
-        REFRESH_COOKIES_OPTIONS
+        REFRESH_COOKIE_OPTIONS
       );
       res.json(userData);
     } catch (error) {
@@ -76,9 +77,9 @@ class UserController {
       const { refreshToken } = req.cookies;
       const userData = await userService.refresh(refreshToken);
       res.cookie(
-        "refreshToken",
+        REFRESH_COOKIE_NAME,
         userData.refreshToken,
-        REFRESH_COOKIES_OPTIONS
+        REFRESH_COOKIE_OPTIONS
       );
       return res.json(userData);
     } catch (error) {
@@ -114,15 +115,23 @@ class UserController {
     }
   };
 
-  check = async (
-    req: Request<{}, {}, { token: string }>,
-    res: Response,
-    next: NextFunction
-  ) => {
+  check = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { token } = req.body;
-      
-    } catch (error) {}
+      const { authorization } = req.headers;
+      const { refreshToken } = req.cookies;
+      const userData = await userService.check(
+        authorization?.split(" ")[1],
+        refreshToken
+      );
+      res.cookie(
+        REFRESH_COOKIE_NAME,
+        userData.refreshToken,
+        REFRESH_COOKIE_OPTIONS
+      );
+      res.json(userData);
+    } catch (error) {
+      next(error);
+    }
   };
 }
 

@@ -1,6 +1,8 @@
 import dotenv from "dotenv";
 import { NextFunction, Request, Response } from "express";
+import { validationResult } from 'express-validator';
 import userService from "../../services/user-service";
+import ApiError from '../../exceptions/index';
 
 dotenv.config();
 
@@ -16,6 +18,12 @@ class UserController {
   ) => {
     try {
       const { email, password, secondPassword } = req.body;
+
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return next(ApiError.BadRequest('Ошибка валидации', errors.array()))
+      }
+
       const userData = await userService.registration(
         email,
         password,
@@ -108,6 +116,10 @@ class UserController {
   ) => {
     try {
       const { password, secondPassword, chnageLink } = req.body;
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return next(ApiError.BadRequest('Ошибка валидации', errors.array()))
+      }
       await userService.changePassword(password, secondPassword, chnageLink);
       res.status(200);
     } catch (error) {

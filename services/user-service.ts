@@ -50,7 +50,7 @@ class UserService {
 
     await mailService.sendActivationMail(
       email,
-      `${process.env.API_URL}/api/activate${activateLink}`
+      `${process.env.API_URL}/api/activate/${activateLink}`
     );
 
     return await this.giveTokensToUser(user);

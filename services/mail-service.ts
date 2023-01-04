@@ -11,6 +11,7 @@ class MailService {
       host: SMTP_HOST,
       port: +SMTP_PORT,
       secure: true,
+      tls: { rejectUnauthorized: false },
       auth: {
         user: SMTP_USER,
         pass: SMTP_PASSWORD,

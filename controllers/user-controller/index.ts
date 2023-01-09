@@ -103,7 +103,7 @@ class UserController {
     try {
       const { email } = req.body;
       await userService.changePasswordRequest(email);
-      res.status(200);
+      res.json({ success: true });
     } catch (error) {
       next(error);
     }

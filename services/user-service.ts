@@ -119,7 +119,7 @@ class UserService {
     await user.save();
     await mailService.sendChangePasswordMail(
       email,
-      `${process.env.API_URL}/api/activate${changeLink}`
+      `${process.env.CLIENT_URL}/api/activate${changeLink}`
     );
   };
 

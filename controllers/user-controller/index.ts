@@ -145,6 +145,17 @@ class UserController {
       next(error);
     }
   };
+
+  resendEmail = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { email } = req.body;
+
+      await userService.resendEmail(email);
+      res.json({ success: true });
+    } catch (error) {
+      next(error)
+    }
+  }
 }
 
 export default new UserController();

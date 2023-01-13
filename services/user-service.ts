@@ -171,8 +171,20 @@ class UserService {
       }
     }
 
-    throw ApiError.UnauthorizedError(); 
+    throw ApiError.UnauthorizedError();
   };
+
+  resendEmail = async (email: string) => {
+    const user = await User.findOne({ where: { email, } });
+  
+    if (!user) {
+      throw ApiError.BadRequest('На такой email не зарагестрирован аккаунт');
+    }
+    await mailService.sendActivationMail(
+      email,
+      `${process.env.API_URL}/api/activate/${user?.activateLink}`
+    );
+  }
 }
 
 export default new UserService();

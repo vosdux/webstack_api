@@ -1,6 +1,7 @@
 import sequelize from "../db";
 import { DataTypes, Model, Optional, UUIDV4, UUID } from "sequelize";
 import { Token } from "./token-model";
+import { UserInfo } from "./user-info-model";
 
 interface UserAttributes {
   id: string;
@@ -42,3 +43,6 @@ export const User = sequelize.define<UserInstance>("user", {
 
 User.hasOne(Token, { sourceKey: "id" });
 Token.belongsTo(User, { targetKey: "id" });
+
+User.hasOne(UserInfo, { sourceKey: "id" });
+UserInfo.belongsTo(User, { targetKey: "id" });

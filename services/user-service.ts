@@ -7,6 +7,7 @@ import UserDto from "../dto/user-dto";
 import ApiError from "../exceptions/index";
 import { User } from "../models";
 import { UserInstance } from "../models/user-model";
+import { UserInfo } from '../models/user-info-model';
 
 dotenv.config();
 
@@ -47,6 +48,8 @@ class UserService {
       password: hashPassword,
       activateLink,
     });
+
+    await UserInfo.create({ userId: user.id });
 
     await mailService.sendActivationMail(
       email,
@@ -119,7 +122,7 @@ class UserService {
     await user.save();
     await mailService.sendChangePasswordMail(
       email,
-      `${process.env.CLIENT_URL}/api/activate${changeLink}`
+      `${process.env.CLIENT_URL}api/activate${changeLink}`
     );
   };
 

@@ -19,7 +19,7 @@ router.post(
   UserController.changePassword,
 );
 router.post('/resend', UserController.resendEmail);
-router.get("/check", UserController.check);
+router.post("/check", UserController.check);
 router.get("/activate/:link", UserController.activate);
 router.get("/refresh", UserController.refresh);
 

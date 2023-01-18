@@ -11,7 +11,7 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 8000;
 
-app.use(cors({ credentials: true, origin: true, allowedHeaders: ['authorization', 'content-type', 'Cookie'] }));
+app.use(cors({ credentials: true, origin: true }));
 app.use(express.json());
 app.use(cookieParser());
 app.use("/api", router);

@@ -8,12 +8,31 @@ class UserInfoController {
     next: NextFunction
   ) => {
     try {
-      const file = req.files?.file
       const { authorization } = req.headers;
 
-      await userInfoService.updateUserInfo(req.body, authorization?.split(" ")[1], file);
+      await userInfoService.updateUserInfo(
+        req.body,
+        authorization?.split(" ")[1],
+        req.file
+      );
 
       res.json({ succes: true });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  getUserInfo = async (
+    req: Request<{}, {}, {}, { id: string }>,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const { id } = req.query;
+
+      const data = await userInfoService.getUserInfo(id);
+
+      res.json(data);
     } catch (error) {
       next(error);
     }

@@ -1,6 +1,5 @@
 import sequelize from "../db";
 import { DataTypes, Model, Optional, UUIDV4, UUID } from "sequelize";
-import { User } from "./user-model";
 
 interface UserAttributes {
   id: string;
@@ -26,17 +25,17 @@ export interface UserInstance
   updatedAt?: Date;
 }
 
-export const UserInfo = sequelize.define<UserInstance>("user", {
+export const UserInfo = sequelize.define<UserInstance>("user-info", {
   id: {
     allowNull: false,
     primaryKey: true,
     type: UUID,
     defaultValue: UUIDV4,
   },
-  firstName: { type: DataTypes.STRING },
-  lastName: { type: DataTypes.STRING },
-  country: { type: DataTypes.STRING },
-  city: { type: DataTypes.STRING },
-  info: { type: DataTypes.STRING },
-  avatar: { type: DataTypes.BLOB },
+  firstName: { type: DataTypes.STRING, allowNull: true },
+  lastName: { type: DataTypes.STRING, allowNull: true },
+  country: { type: DataTypes.STRING, allowNull: true },
+  city: { type: DataTypes.STRING, allowNull: true },
+  info: { type: DataTypes.STRING, allowNull: true },
+  avatar: { type: DataTypes.STRING, allowNull: true },
 });

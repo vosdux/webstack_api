@@ -2,6 +2,7 @@ import { Router } from "express";
 import { body } from "express-validator";
 import UserController from "../controllers/user-controller";
 import userInfoController from "../controllers/user-info-controller";
+import fileMiddleware from "../middleware/file-middleware";
 
 const router = Router();
 
@@ -24,6 +25,7 @@ router.get("/check", UserController.check);
 router.get("/activate/:link", UserController.activate);
 router.get("/refresh", UserController.refresh);
 
-router.post("/user-info", userInfoController.updateUserInfo);
+router.post("/user-info", fileMiddleware.single('avatar'), userInfoController.updateUserInfo);
+router.get("/user-info", userInfoController.getUserInfo);
 
 export default router;

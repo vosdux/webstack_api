@@ -1,12 +1,13 @@
+import path from 'path';
+import dotenv from 'dotenv';
 import { UserInfo } from './../models/user-info-model';
-import { UploadedFile } from "express-fileupload"
 import ApiError from "../exceptions";
 import tokenService from './token-service';
 
-const allowedAvatrTypes = ['image/png'];
+dotenv.config();
 
 class UserInfoService {
-  updateUserInfo = async (data: UserInfoBody, accessToken?: string, file?: UploadedFile | UploadedFile[]) => {
+  updateUserInfo = async (data: UserInfoBody, accessToken?: string, file?: Express.Multer.File) => {
     if (!accessToken) {
       throw ApiError.UnauthorizedError();
     }
@@ -18,27 +19,17 @@ class UserInfoService {
     }
 
     const userInfo = await UserInfo.findOne({ where: { userId: accessPayload.id } });
-  
+
     if (!userInfo) {
       throw ApiError.BadRequest('Такого пользователя не существует');
     }
-  
-    if (file) {
-      if (Array.isArray(file)) {
-        throw ApiError.BadRequest('Загрузите одну картинку');
-      }
-  
-      if (!allowedAvatrTypes.some(elem => elem === file.mimetype)) {
-        throw ApiError.BadRequest('Не поддерживаемый формат');
-      }
-  
+
+    if (file) {  
       if (file.size > 907390) {
         throw ApiError.BadRequest('Слишком большой размер');
       }
 
-      file.mv('/avatars');
-
-      userInfo.avatar = `${process.env.API_URL}/avatars`;
+      userInfo.avatar = `${process.env.API_URL}/images/${file.filename}`;
     }
 
     const { firstName, lastName, country, city } = data;
@@ -49,7 +40,24 @@ class UserInfoService {
     userInfo.firstName = firstName;
 
     await userInfo.save();
-  }
+  };
+
+  getUserInfo = async (userId: string) => {
+    const user = await UserInfo.findOne({ where: { userId } });
+
+    if (!user) {
+      throw ApiError.BadRequest('Пользователя не существует');
+    }
+
+    return {
+      firstName: user.firstName,
+      lastName: user.lastName,
+      country: user.country,
+      city: user.city,
+      info: user.info,
+      avatar: user.avatar,
+    };
+  };
 }
 
 export default new UserInfoService();

@@ -2,7 +2,6 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import fileUpload from 'express-fileupload';
 import sequelize from "./db";
 import router from "./router";
 import errorMiddleware from "./middleware/error-middleware";
@@ -12,7 +11,7 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 8000;
 
-app.use(fileUpload({}))
+app.use('/images', express.static('images'));
 app.use(cors({ credentials: true, origin: true }));
 app.use(express.json());
 app.use(cookieParser());

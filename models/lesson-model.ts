@@ -34,5 +34,5 @@ export const Lesson = sequelize.define<LessonInstance>("lesson", {
   homework: { type: DataTypes.STRING },
 });
 
-Lesson.hasMany(User, { sourceKey: "id" });
+Lesson.belongsToMany(User, { through: { model: CompletedLessons } });
 User.belongsToMany(Lesson, { through: { model: CompletedLessons } });

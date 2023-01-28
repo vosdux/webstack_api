@@ -43,8 +43,8 @@ export const Course = sequelize.define<CourseInstance>("course", {
 Course.hasOne(Lesson, { sourceKey: "id" });
 Lesson.belongsTo(Course, { targetKey: "id" });
 
-Course.hasMany(User, { sourceKey: "id" });
+Course.belongsToMany(User, { through: { model: Bought } });
 User.belongsToMany(Course, { through: { model: Bought } });
 
-Course.hasMany(User, { sourceKey: "id" });
+Course.belongsToMany(User, { through: { model: CompletedCourses } });
 User.belongsToMany(Course, { through: { model: CompletedCourses } });

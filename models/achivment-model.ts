@@ -29,5 +29,5 @@ export const Achivment = sequelize.define<UserInstance>("achivment", {
   image: { type: DataTypes.STRING },
 });
 
-Achivment.hasMany(User, { sourceKey: "id" });
+Achivment.belongsToMany(User, { through: { model: Achived } });
 User.belongsToMany(Achivment, { through: { model: Achived } });

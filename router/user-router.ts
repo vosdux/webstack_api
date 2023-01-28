@@ -26,12 +26,12 @@ userRouter.post(
   body("password")
     .isLength({ min: 8, max: 32 })
     .withMessage("Пароль слишком короткий")
-    .matches(new RegExp("^(?=.*d)(?=.*[a-z])(?=.*[A-Z])(?!.*s).*$"))
+    .matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])")
     .withMessage("Недостаточно надежный пароль"),
   UserController.changePassword
 );
 userRouter.post("/resend", UserController.resendEmail);
-userRouter.get("/check", UserController.check);
+userRouter.post("/check", UserController.check);
 userRouter.get("/activate/:link", UserController.activate);
 userRouter.get("/refresh", UserController.refresh);
 

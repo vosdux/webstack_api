@@ -1,2 +1,10 @@
-export { Token } from './token-model';
-export { User } from './user-model';
+export { Token } from "./token-model";
+export { User } from "./user-model";
+export { UserInfo } from "./user-info-model";
+export { Lesson } from "./lesson-model";
+export { Course } from "./course-model";
+export { CompletedLessons } from "./completed-lessons-model";
+export { CompletedCourses } from "./completed-courses-model";
+export { Bought } from "./bought-model";
+export { Achivment } from "./achivment-model";
+export { Achived } from "./achived-model";

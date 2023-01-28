@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import userInfoService from "../../services/user-info-service";
+import { userInfoService } from "../../services";
 
 class UserInfoController {
   updateUserInfo = async (

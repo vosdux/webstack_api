@@ -1,7 +1,7 @@
 import sequelize from "../db";
 import { DataTypes, Model, Optional, UUIDV4, UUID } from "sequelize";
 import { User } from "./user-model";
-import { Achived } from "./achived";
+import { Achived } from "./achived-model";
 
 interface AchivmentAttributes {
   id: string;

@@ -1,6 +1,6 @@
 import jwt, { JwtPayload } from "jsonwebtoken";
 import dotenv from 'dotenv';
-import { Token } from "../models/token-model";
+import { Token } from "../models";
 
 dotenv.config();
 

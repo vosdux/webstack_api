@@ -5,9 +5,8 @@ import mailService from "./mail-service";
 import tokenService from "./token-service";
 import UserDto from "../dto/user-dto";
 import ApiError from "../exceptions/index";
-import { User } from "../models";
+import { User, UserInfo } from "../models";
 import { UserInstance } from "../models/user-model";
-import { UserInfo } from '../models/user-info-model';
 
 dotenv.config();
 

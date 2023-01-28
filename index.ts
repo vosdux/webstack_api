@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import sequelize from "./db";
-import router from "./router";
+import { userRouter, userInfoRouter, coursesRouter, lessonRouter } from "./router";
 import errorMiddleware from "./middleware/error-middleware";
 
 dotenv.config();
@@ -15,7 +15,10 @@ app.use('/images', express.static('images'));
 app.use(cors({ credentials: true, origin: true }));
 app.use(express.json());
 app.use(cookieParser());
-app.use("/api", router);
+app.use("/api", userRouter);
+app.use("/api", userInfoRouter);
+app.use("/api", coursesRouter);
+app.use("/api", lessonRouter);
 app.use(errorMiddleware);
 
 app.get("/health", (req, res) => {

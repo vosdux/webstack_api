@@ -4,7 +4,7 @@ import { Model, Optional, UUIDV4, UUID } from "sequelize";
 interface BoughtAttributes {
   id: string;
   courseId?: string;
-  boughtId?: string;
+  userId?: string;
 }
 
 interface BoughtCreationAttributes extends Optional<BoughtAttributes, "id"> {}

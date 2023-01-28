@@ -1,8 +1,8 @@
 import dotenv from "dotenv";
 import { NextFunction, Request, Response } from "express";
 import { validationResult } from 'express-validator';
-import userService from "../../services/user-service";
 import ApiError from '../../exceptions/index';
+import { userService } from "../../services";
 
 dotenv.config();
 

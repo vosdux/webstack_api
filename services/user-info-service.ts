@@ -1,4 +1,3 @@
-import path from 'path';
 import dotenv from 'dotenv';
 import { UserInfo } from './../models/user-info-model';
 import ApiError from "../exceptions";

@@ -7,7 +7,7 @@ import { userService } from "../../services";
 dotenv.config();
 
 const THIRTY_DAYS = 30 * 24 * 60 * 60 * 1000;
-const REFRESH_COOKIE_OPTIONS = { maxAge: THIRTY_DAYS, httpOnly: true };
+const REFRESH_COOKIE_OPTIONS = { maxAge: THIRTY_DAYS, sameSite: 'none' as const, secure: true };
 const REFRESH_COOKIE_NAME = 'refreshToken';
 
 class UserController {

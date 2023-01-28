@@ -1,14 +1,18 @@
 import dotenv from "dotenv";
 import { NextFunction, Request, Response } from "express";
-import { validationResult } from 'express-validator';
-import ApiError from '../../exceptions/index';
+import { validationResult } from "express-validator";
+import ApiError from "../../exceptions/index";
 import { userService } from "../../services";
 
 dotenv.config();
 
 const THIRTY_DAYS = 30 * 24 * 60 * 60 * 1000;
-const REFRESH_COOKIE_OPTIONS = { maxAge: THIRTY_DAYS, sameSite: 'none' as const, secure: true };
-const REFRESH_COOKIE_NAME = 'refreshToken';
+const REFRESH_COOKIE_OPTIONS = {
+  maxAge: THIRTY_DAYS,
+  sameSite: "none" as const,
+  secure: true,
+};
+const REFRESH_COOKIE_NAME = "refreshToken";
 
 class UserController {
   registration = async (
@@ -21,7 +25,11 @@ class UserController {
 
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
-        return next(ApiError.BadRequest('Ошибка валидации', errors.array()))
+        return next(ApiError.BadRequest("Ошибка валидации", errors.array()));
+      }
+
+      if (password !== secondPassword) {
+        throw ApiError.BadRequest("Пароли не совпадают");
       }
 
       const userData = await userService.registration(
@@ -55,7 +63,7 @@ class UserController {
       );
       res.json(userData);
     } catch (error) {
-      console.log(error, 'err');
+      console.log(error, "err");
       next(error);
     }
   };
@@ -119,8 +127,13 @@ class UserController {
       const { password, secondPassword, chnageLink } = req.body;
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
-        return next(ApiError.BadRequest('Ошибка валидации', errors.array()))
+        return next(ApiError.BadRequest("Ошибка валидации", errors.array()));
       }
+
+      if (password !== secondPassword) {
+        throw ApiError.BadRequest("Пароли не совпадают");
+      }
+
       await userService.changePassword(password, secondPassword, chnageLink);
       res.status(200);
     } catch (error) {
@@ -154,9 +167,9 @@ class UserController {
       await userService.resendEmail(email);
       res.json({ success: true });
     } catch (error) {
-      next(error)
+      next(error);
     }
-  }
+  };
 }
 
 export default new UserController();

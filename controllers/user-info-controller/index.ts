@@ -23,14 +23,14 @@ class UserInfoController {
   };
 
   getUserInfo = async (
-    req: Request<{}, {}, {}, { id: string }>,
+    req: Request<{ userId: string }>,
     res: Response,
     next: NextFunction
   ) => {
     try {
-      const { id } = req.query;
+      const { userId } = req.params;
 
-      const data = await userInfoService.getUserInfo(id);
+      const data = await userInfoService.getUserInfo(userId);
 
       res.json(data);
     } catch (error) {

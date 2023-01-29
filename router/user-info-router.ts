@@ -5,6 +5,6 @@ import fileMiddleware from "../middleware/file-middleware";
 const userInfoRouter = Router();
 
 userInfoRouter.post("/user-info", fileMiddleware.single('avatar'), userInfoController.updateUserInfo);
-userInfoRouter.get("/user-info", userInfoController.getUserInfo);
+userInfoRouter.get("/user-info/:userId", userInfoController.getUserInfo);
 
 export default userInfoRouter;

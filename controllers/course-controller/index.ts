@@ -7,11 +7,9 @@ import { courseService } from "../../services";
 class CourseController {
   getCourses = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { userId, offset, limit } = req.query;
-      if (!userId) {
-        throw ApiError.BadRequest('Необходим id опльзователя');
-      }
-      const courses = await courseService.getCourses(userId as string, offset as string, limit as string);
+      const { offset, limit } = req.query;
+
+      const courses = await courseService.getCourses(req.user as string, offset as string, limit as string);
 
       res.send(courses)
     } catch (error) {

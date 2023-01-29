@@ -2,13 +2,13 @@ import sequelize from "../db";
 import { DataTypes, Model, Optional, UUIDV4, UUID } from "sequelize";
 
 interface UserAttributes {
-  id: string;
-  firstName: string;
-  lastName: string;
-  country: string;
-  city: boolean;
-  info: string;
-  avatar: string
+  id: string | null;
+  firstName: string | null;
+  lastName: string | null;
+  country: string | null;
+  city: string | null;
+  info: string | null;
+  avatar: string | null
   userId?: string;
 }
 

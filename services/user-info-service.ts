@@ -1,23 +1,16 @@
 import dotenv from 'dotenv';
 import { UserInfo } from './../models/user-info-model';
 import ApiError from "../exceptions";
-import tokenService from './token-service';
 
 dotenv.config();
 
 class UserInfoService {
-  updateUserInfo = async (data: UserInfoBody, accessToken?: string, file?: Express.Multer.File) => {
-    if (!accessToken) {
+  updateUserInfo = async (data: UserInfoBody, userId?: string, file?: Express.Multer.File) => {
+    if (!userId) {
       throw ApiError.UnauthorizedError();
     }
 
-    const accessPayload = await tokenService.validateAccessToken(accessToken);
-
-    if (!accessPayload) {
-      throw ApiError.UnauthorizedError();
-    }
-
-    const userInfo = await UserInfo.findOne({ where: { userId: accessPayload.id } });
+    const userInfo = await UserInfo.findOne({ where: { userId } });
 
     if (!userInfo) {
       throw ApiError.BadRequest('Такого пользователя не существует');
@@ -39,6 +32,8 @@ class UserInfoService {
     userInfo.firstName = firstName;
 
     await userInfo.save();
+
+    return userInfo;
   };
 
   getUserInfo = async (userId: string) => {

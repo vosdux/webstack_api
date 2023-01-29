@@ -2,6 +2,6 @@ type UserInfoBody = {
   firstName: string;
   lastName: string;
   country: string;
-  city: boolean;
+  city: string;
   info: string;
 }

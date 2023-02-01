@@ -13,10 +13,11 @@ export interface CourseAttributes {
   image: string;
   rating: number;
   completedCount: number;
+  purchasedCount: number;
 }
 
 export interface CourseCreationAttributes
-  extends Optional<CourseAttributes, "id" | "rating" | "completedCount"> {}
+  extends Optional<CourseAttributes, "id" | "rating" | "completedCount" | "purchasedCount"> {}
 
 export interface CourseInstance
   extends Model<CourseAttributes, CourseCreationAttributes>,
@@ -38,6 +39,7 @@ export const Course = sequelize.define<CourseInstance>("course", {
   image: { type: DataTypes.STRING },
   rating: { type: DataTypes.INTEGER, defaultValue: 0 },
   completedCount: { type: DataTypes.INTEGER, defaultValue: 0 },
+  purchasedCount: { type: DataTypes.INTEGER, defaultValue: 0 },
 });
 
 Course.hasOne(Lesson, { sourceKey: "id" });

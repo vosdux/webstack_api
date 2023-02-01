@@ -128,7 +128,8 @@ class CourseService {
       lessons: lessonsWithStatus,
       rating: course.rating,
       price: course.price,
-      completed: false,
+      purchasedCount: course.purchasedCount,
+      completedCount: course.completedCount
     };
   };
 }

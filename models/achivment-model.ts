@@ -7,6 +7,8 @@ interface AchivmentAttributes {
   id: string;
   name: string;
   image: string;
+  description: string;
+  steps: number;
 }
 
 interface AchivmentCreationAttributes extends Optional<AchivmentAttributes, "id"> {}
@@ -26,7 +28,9 @@ export const Achivment = sequelize.define<UserInstance>("achivment", {
     defaultValue: UUIDV4,
   },
   name: { type: DataTypes.STRING },
+  description: { type: DataTypes.STRING },
   image: { type: DataTypes.STRING },
+  steps: { type: DataTypes.INTEGER }
 });
 
 Achivment.belongsToMany(User, { through: { model: Achived } });

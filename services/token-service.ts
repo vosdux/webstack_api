@@ -4,7 +4,7 @@ import { Token } from "../models";
 
 dotenv.config();
 
-type TokenPayload = { id: string; email: string; role: string };
+export type TokenPayload = { id: string; email: string; role: string };
 
 class TokenService {
   generateTokens = (payload: TokenPayload) => {

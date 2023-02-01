@@ -60,10 +60,8 @@ class UserService {
 
   login = async (username: string, password: string) => {
     const err = "Неверный логин или пароль";
-    console.log(username, 'username');
 
     const user = await User.findOne({ where: { email: username } });
-    console.log(user, 'user')
     if (!user) {
       throw ApiError.BadRequest(err);
     }

@@ -1,7 +1,7 @@
 import { NextFunction, Response, Request } from "express";
-import ApiError from "../exceptions/index";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import { TokenPayload } from "../services/token-service";
 
 dotenv.config();
 
@@ -16,8 +16,9 @@ export default (req: Request, res: Response, next: NextFunction) => {
       return res.status(401).json({ message: "Пользователь не авторизован" });
     }
 
-    const decoded  = jwt.verify(token, process.env.JWT_ACCESS_SECRET) as { id: string };
+    const decoded  = jwt.verify(token, process.env.JWT_ACCESS_SECRET) as TokenPayload;
     req.user = decoded.id;
+    req.role = decoded.role;
 
     next();
   } catch (error) {

@@ -1,3 +1,4 @@
+import { Op } from 'sequelize';
 import ApiError from "../exceptions/index";
 import { Bought, Course, Lesson, CompletedLessons } from "../models";
 import {
@@ -6,10 +7,15 @@ import {
 } from "../models/course-model";
 
 class CourseService {
-  getCourses = async (userId: string, offset = "0", limit = "1000") => {
+  getCourses = async (userId: string, offset = "0", limit = "1000", search?: string) => {
     const courses = await Course.findAndCountAll({
       offset: +offset,
       limit: +limit,
+      where: search ? {
+        name: {
+          [Op.substring]: search,
+        }
+      } : undefined,
     });
 
     const formatedCourses = await Promise.all(
@@ -28,8 +34,12 @@ class CourseService {
         const completedLength = completedLessons.length || 0;
 
         return {
+          id: item.id,
           name: item.name,
           lessons: lessons.length,
+          image: item.image,
+          price: item.price,
+          description: item.description,
           percent: completedLength * oneLessonPercent,
           purchased: !!purchased,
         };
@@ -37,7 +47,7 @@ class CourseService {
     );
 
     return {
-      data: formatedCourses,
+      rows: formatedCourses,
       total: courses.count,
     };
   };
@@ -87,6 +97,10 @@ class CourseService {
     return course;
   };
 
+  deleteCourse = async (courseId: string) => {
+    return await Course.destroy({ where: { id: courseId } });
+  };
+
   getCourseInfo = async (courseId: string) => {
     const course = await Course.findOne({ where: { id: courseId } });
 
@@ -95,16 +109,18 @@ class CourseService {
     }
 
     const lessons = await Lesson.findAll({ where: { courseId } });
-    const lessonsWithStatus = await Promise.all(lessons.map(async (item) => {
-      const completed = await CompletedLessons.findOne({
-        where: { lessonId: item.id },
-      });
+    const lessonsWithStatus = await Promise.all(
+      lessons.map(async (item) => {
+        const completed = await CompletedLessons.findOne({
+          where: { lessonId: item.id },
+        });
 
-      return {
-        name: item.name,
-        completed: !!completed,
-      };
-    }));
+        return {
+          name: item.name,
+          completed: !!completed,
+        };
+      })
+    );
 
     return {
       name: course.name,

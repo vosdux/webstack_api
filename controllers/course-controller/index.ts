@@ -1,22 +1,30 @@
 import { NextFunction, Request, Response } from "express";
 import { validationResult } from "express-validator";
 import ApiError from "../../exceptions";
-import { CourseAttributes, CourseCreationAttributes } from "../../models/course-model";
+import {
+  CourseAttributes,
+  CourseCreationAttributes,
+} from "../../models/course-model";
 import { courseService } from "../../services";
 
 class CourseController {
   getCourses = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { offset, limit } = req.query;
+      const { offset, limit, search } = req.query;
 
-      const courses = await courseService.getCourses(req.user as string, offset as string, limit as string);
+      const courses = await courseService.getCourses(
+        req.user as string,
+        offset as string,
+        limit as string,
+        search as string | undefined,
+      );
 
-      res.send(courses)
+      res.send(courses);
     } catch (error) {
       next(error);
     }
   };
-  
+
   getCourseInfo = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { courseId } = req.params;
@@ -28,7 +36,11 @@ class CourseController {
     }
   };
 
-  createCourse = async (req: Request<{}, {}, CourseCreationAttributes>, res: Response, next: NextFunction) => {
+  createCourse = async (
+    req: Request<{}, {}, CourseCreationAttributes>,
+    res: Response,
+    next: NextFunction
+  ) => {
     try {
       const errors = validationResult(req);
 
@@ -37,14 +49,18 @@ class CourseController {
       }
 
       const course = await courseService.createCourse(req.body, req.file);
-      
+
       res.send(course);
     } catch (error) {
       next(error);
     }
-  }
-  
-  updateCourse = async (req: Request<{}, {}, CourseAttributes>, res: Response, next: NextFunction) => {
+  };
+
+  updateCourse = async (
+    req: Request<{}, {}, CourseAttributes>,
+    res: Response,
+    next: NextFunction
+  ) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -55,9 +71,23 @@ class CourseController {
 
       res.send(course);
     } catch (error) {
-      next(error)
+      next(error);
     }
-  }
+  };
+
+  deleteCourse = async (req: Request,
+    res: Response,
+    next: NextFunction) => {
+      try {
+        const { courseId } = req.params;
+
+        const id = await courseService.deleteCourse(courseId);
+
+        res.send({ id });
+      } catch (error) {
+        next(error);
+      }
+    }
 }
 
 export default new CourseController();
